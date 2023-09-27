@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 
 const MealItem = ({
@@ -8,6 +9,7 @@ const MealItem = ({
   complexity,
   affordability,
 }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.mealItem}>
       <Pressable
@@ -16,6 +18,7 @@ const MealItem = ({
           styles.button,
           pressed ? styles.buttonPressed : null,
         ]}
+        onPress={() => navigation.navigate("MealDetails", {mealId: id,})}
       >
         <View>
           <Image source={{ uri: imageUrl }} style={styles.image} />

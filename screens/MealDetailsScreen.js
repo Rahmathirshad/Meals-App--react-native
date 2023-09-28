@@ -2,8 +2,11 @@ import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import Subtitle from "../common-components/MealDetail/Subtitle";
 import List from "../common-components/MealDetail/List";
+import StarIconButton from "../common-components/StarIconButton";
+import { useEffect, useState } from "react";
 
-const MealDetailsScreen = ({ route }) => {
+const MealDetailsScreen = ({ route, navigation }) => {
+  const [starIconName, setStarIconName] = useState("star-outline");
   const { mealId } = route.params;
   const {
     imageUrl,
@@ -14,15 +17,26 @@ const MealDetailsScreen = ({ route }) => {
     ingredients,
     steps,
   } = MEALS.find((item) => item.id == mealId);
+
+  const handleStarIcon = () => {
+    starIconName == "star-outline"? setStarIconName("star") : setStarIconName("star-outline");
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <StarIconButton name={starIconName} size={22} color="white" onPress={handleStarIcon}/>,
+    });
+  }, [starIconName]);
   return (
     <ScrollView style={styles.mealItem}>
       <Image style={styles.image} source={{ uri: imageUrl }} />
-      <Text style={styles.title} >{title}</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.details}>
         <Text style={styles.detailsItem}>{duration}min</Text>
         <Text style={styles.detailsItem}>{complexity.toUpperCase()}</Text>
         <Text style={styles.detailsItem}>{affordability.toUpperCase()}</Text>
       </View>
+
       <View style={styles.mealDetailContainer}>
         <Subtitle>INGREDIENTS</Subtitle>
         <List listData={ingredients} />
@@ -44,12 +58,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   title: {
-    color: 'white',
+    color: "white",
     fontWeight: "bold",
     fontSize: 15,
     textAlign: "center",
     marginTop: 8,
-    
   },
   details: {
     flexDirection: "row",
@@ -58,14 +71,14 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   detailsItem: {
-    color: 'white',
+    color: "white",
     fontSize: 12,
     marginHorizontal: 4,
   },
-  mealDetailContainer:{
-    maxWidth: '80%',
-    alignSelf: 'center'
-  }
+  mealDetailContainer: {
+    maxWidth: "80%",
+    alignSelf: "center",
+  },
 });
 
 export default MealDetailsScreen;
